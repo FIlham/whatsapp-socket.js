@@ -1,0 +1,20 @@
+{
+  "name": "whatsapp-socket.js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@whiskeysockets/baileys": "^6.4.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "jimp": "^0.16.13",
+    "mime": "^3.0.0",
+    "mime-types": "^2.1.35",
+    "mimetypes": "^0.1.1",
+    "node-fetch": "^2.6.12",
+    "node-webpmux": "^3.1.7",
+    "pino": "^8.14.1",
+    "qrcode-terminal": "^0.12.0"
+  },
+  "author": "Fahmi Ilham"
+}
