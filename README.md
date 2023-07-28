@@ -10,7 +10,7 @@ You can use all the features here like you use whatsapp-web.js with the help of 
 I cannot guarantee that you can always use this library safely because the threat from WhatsApp to users who use unofficial WhatsApp API services is the possibility of an account ban/blocking for those who engage in such actions, and this ban can be for a significant period. So, use this at your own risk.
 
 # Get started
-Untuk memulai, yang pertama anda harus menginstall library ini dengan menggunakan npm/yarn/pnpm
+To get started, first, you need to install this library using npm/yarn/pnpm.
 
 NPM
 ```
@@ -24,7 +24,7 @@ PNPM
 ```
 pnpm install whatsapp-socket.js
 ```
-Jika anda sudah menginstall library ini, anda bisa membuat file javascript dan isi dengan kode berikut
+If you have installed the library, you can create a JavaScript file and fill it with the following code.
 ```js
 const { Client } = require("whatsapp-socket.js");
 
@@ -40,12 +40,12 @@ client.on("message", (msg) => {
     }
 });
 ```
-Sedikit penjelasan: Anda harus mengimport class client yang ada di library dan menginisialisasikan dengan variabel yang ada (``const client = new Client()``). Setelah itu menggunakan [event](https://asu.com) untuk mendapatkan beberapa data dari hasil koneksi ke server WhatsApp.
+A brief explanation: You need to import the client class from the library and initialize it with the available variable (``const client = new Client()``). After that, use events to obtain some data from the WhatsApp server connection.
 
 # Options
 
-Ada beberapa opsi yang tersedia di library ini
-```
+There are several options available in this library.
+```ts
 /** Client options */
 interface ClientOptions {
     /** Session name of client */
@@ -74,7 +74,8 @@ interface MessageOptions {
     extra?: any;
 }
 ```
-Selengkapnya bisa lihat di [index.d.ts](https://)
+For more details, you can refer to index.d.ts.
 
 _i need more time to create this documentation (⁠╥⁠﹏⁠╥⁠)_
 _you can open issues if there is any problem/solution_
+_the 'alternative documentation' availabel in [example.js](https://github.com/FIlham/whatsapp-socket.js/blob/main/example.js)_
