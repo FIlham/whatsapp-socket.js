@@ -23,6 +23,7 @@ const parseMention = (text = "") => { return [...text.matchAll(/@([0-9]{5,16}|0)
  * @fires Client#qr
  * @fires Client#connecting
  * @fires Client#ready
+ * @fires Client#disconnect
  * @fires Client#message
  * @fires Client#group_participants_update
  */
@@ -57,14 +58,28 @@ class Client extends EventEmitter {
 
             sock.ev.on("connection.update", (update) => {
                 if (update.qr) {
+                    /**
+                     * Emitted when qr ready to scan
+                     * @event Client#qr
+                     * @param {string}
+                     */
                     this.emit("qr", update.qr);
                 }
 
                 if (update.connection == "close") {
                     const statusCode = new Boom(update.lastDisconnect?.error)?.output.statusCode;
-                    if (statusCode !== DisconnectReason.loggedOut) {
-                        this.emit("connecting", "connecting back to socket");
-                        this.initialize()
+                    if (statusCode === DisconnectReason.loggedOut || statusCode === DisconnectReason.badSession || statusCode === DisconnectReason.connectionReplaced) {
+                        /**
+                         * Emitted when socket is closed/disconnect from whatsapp server
+                         * @event Client#disconnect
+                         */
+                        this.emit("disconnect", "Connection should be disconnect");
+                    } else {
+                        /**
+                         * Emitted when socket is connecting/reconnecting to whatsapp server
+                         */
+                        this.emit("connecting", "Connection keep connecting to server");
+                        this.initialize();
                     }
                 } else if (update.connection == "connecting") this.emit("connecting", "connecting to socket");
                 else if (update.connection == "open") this.emit("ready", "connection has ready");
@@ -177,6 +192,16 @@ class Client extends EventEmitter {
     async getGroupMetadata(groupId) {
         const groupData = await this.sock.groupMetadata(groupId);
         return new Group(this, groupData);
+    }
+
+    /**
+     * Destroy a client socket connection
+     */
+    destroy() {
+        fs.unlinkSync(`./${this.options.sessionName}`);
+        fs.unlinkSync(`./${this.options.sessionName}.json`);
+        this.sock.end();
+        return;
     }
 }
 

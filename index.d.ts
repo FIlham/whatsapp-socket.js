@@ -32,6 +32,9 @@ declare namespace WaSocketJS {
         /** Emitted when socket is connect to whatsapp server and connection is ready  */
         on(event: "ready", listener: (message: string) => void): this;
 
+        /** Emitted when socket is closed/disconnect from whatsapp server */
+        on(event: "disconnect", listener: (message: string) => void): this;
+
         /** Emitted when received message */
         on(event: "message", listener: (
             /** Message is received */
