@@ -58,6 +58,7 @@ class Client extends EventEmitter {
 
             sock.ev.on("connection.update", (update) => {
                 if (update.qr) {
+                    this.sock.state = update.connection;
                     /**
                      * Emitted when qr ready to scan
                      * @event Client#qr
@@ -69,20 +70,27 @@ class Client extends EventEmitter {
                 if (update.connection == "close") {
                     const statusCode = new Boom(update.lastDisconnect?.error)?.output.statusCode;
                     if (statusCode === DisconnectReason.loggedOut || statusCode === DisconnectReason.badSession || statusCode === DisconnectReason.connectionReplaced) {
+                        this.sock.state = "close";
                         /**
                          * Emitted when socket is closed/disconnect from whatsapp server
                          * @event Client#disconnect
                          */
                         this.emit("disconnect", "Connection should be disconnect");
                     } else {
+                        this.sock.state = "connecting";
                         /**
                          * Emitted when socket is connecting/reconnecting to whatsapp server
                          */
                         this.emit("connecting", "Connection keep connecting to server");
                         this.initialize();
                     }
-                } else if (update.connection == "connecting") this.emit("connecting", "connecting to socket");
-                else if (update.connection == "open") this.emit("ready", "connection has ready");
+                } else if (update.connection == "connecting") {
+                    this.sock.state = update.connection;
+                    this.emit("connecting", "connecting to socket");
+                } else if (update.connection == "open") {
+                    this.sock.state = update.connection;
+                    this.emit("ready", "connection has ready");
+                }
             })
 
             sock.ev.on("messages.upsert", ({ messages }) => {
@@ -198,8 +206,9 @@ class Client extends EventEmitter {
      * Destroy a client socket connection
      */
     destroy() {
-        fs.unlinkSync(`./${this.options.sessionName}`);
-        fs.unlinkSync(`./${this.options.sessionName}.json`);
+        const checkSession = fs.existsSync(`./${this.options.sessionName}.json`) || fs.existsSync(`./${this.options.sessionName}`);
+        if (checkSession) fs.unlinkSync(`./${this.options.sessionName}`);
+        if (checkSession) fs.unlinkSync(`./${this.options.sessionName}.json`);
         this.sock.end();
         return;
     }

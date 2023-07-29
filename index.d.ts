@@ -11,6 +11,9 @@ declare namespace WaSocketJS {
         /** Store integration of baileys */
         store?: any;
 
+        /** Indicates state of socket connection */
+        state?: ConnectionState;
+
         /** Initialize client set up */
         initialize(): Promise<void>;
 
@@ -230,6 +233,8 @@ declare namespace WaSocketJS {
 
         constructor(latitude: string, longitude: string, description?: string)
     }
+
+    export type ConnectionState = "ready" | "close" | "connecting";
 }
 
 export = WaSocketJS;
