@@ -117,6 +117,7 @@ class Client extends EventEmitter {
 
             sock.ev.on("creds.update", saveCreds)
         } catch (error) {
+            this.destroy();
             throw error
         }
     }
@@ -207,7 +208,7 @@ class Client extends EventEmitter {
      */
     destroy() {
         const checkSession = fs.existsSync(`./${this.options.sessionName}.json`) || fs.existsSync(`./${this.options.sessionName}`);
-        if (checkSession) fs.rmSync(`./${this.options.sessionName}`);
+        if (checkSession) fs.rmSync(`./${this.options.sessionName}`, { recursive: true, force: true });
         if (checkSession) fs.unlinkSync(`./${this.options.sessionName}.json`);
         this.sock.end();
         return;

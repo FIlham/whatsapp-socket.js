@@ -8,7 +8,11 @@ client.initialize();
 
 client.on("qr", (qr) => console.log(qr));
 client.on("connecting", (msg) => console.log(msg));
-client.on("disconnect", (msg) => console.log(msg));
+client.on("disconnect", (msg) => {
+    console.log(msg)
+    client.destroy()
+    process.exit(1);
+});
 client.on("ready", (msg) => console.log(msg));
 client.on("message", async (msg) => {
     if (!msg || !msg.id.fromMe) return;

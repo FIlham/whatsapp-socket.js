@@ -26,6 +26,9 @@ declare namespace WaSocketJS {
         /** Get group metadata */
         getGroupMetadata(groupId: string): Promise<GroupMetadata>;
 
+        /** Destroy a socket client connection */
+        destroy(): void;
+
         /** Emitted when qr is ready to scan */
         on(event: "qr", listener: (qr: string) => void): this;
 
