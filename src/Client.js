@@ -58,7 +58,7 @@ class Client extends EventEmitter {
 
             sock.ev.on("connection.update", (update) => {
                 if (update.qr) {
-                    this.state = update.connection;
+                    this.state = "connecting";
                     /**
                      * Emitted when qr ready to scan
                      * @event Client#qr
