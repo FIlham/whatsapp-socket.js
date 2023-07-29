@@ -207,9 +207,8 @@ class Client extends EventEmitter {
      * Destroy a client socket connection
      */
     destroy() {
-        const checkSession = fs.existsSync(`./${this.options.sessionName}.json`) || fs.existsSync(`./${this.options.sessionName}`);
-        if (checkSession) fs.rmSync(`./${this.options.sessionName}`, { recursive: true, force: true });
-        if (checkSession) fs.unlinkSync(`./${this.options.sessionName}.json`);
+        if (fs.existsSync(`./${this.options.sessionName}`)) fs.rmSync(`./${this.options.sessionName}`, { recursive: true, force: true });
+        if (fs.existsSync(`./${this.options.sessionName}.json`)) fs.unlinkSync(`./${this.options.sessionName}.json`);
         this.sock.end();
         return;
     }
