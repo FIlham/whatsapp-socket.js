@@ -58,7 +58,7 @@ class Client extends EventEmitter {
 
             sock.ev.on("connection.update", (update) => {
                 if (update.qr) {
-                    this.sock.state = update.connection;
+                    this.state = update.connection;
                     /**
                      * Emitted when qr ready to scan
                      * @event Client#qr
@@ -70,14 +70,14 @@ class Client extends EventEmitter {
                 if (update.connection == "close") {
                     const statusCode = new Boom(update.lastDisconnect?.error)?.output.statusCode;
                     if (statusCode === DisconnectReason.loggedOut || statusCode === DisconnectReason.badSession || statusCode === DisconnectReason.connectionReplaced) {
-                        this.sock.state = "close";
+                        this.state = "close";
                         /**
                          * Emitted when socket is closed/disconnect from whatsapp server
                          * @event Client#disconnect
                          */
                         this.emit("disconnect", "Connection should be disconnect");
                     } else {
-                        this.sock.state = "connecting";
+                        this.state = "connecting";
                         /**
                          * Emitted when socket is connecting/reconnecting to whatsapp server
                          */
@@ -85,10 +85,10 @@ class Client extends EventEmitter {
                         this.initialize();
                     }
                 } else if (update.connection == "connecting") {
-                    this.sock.state = update.connection;
+                    this.state = update.connection;
                     this.emit("connecting", "connecting to socket");
                 } else if (update.connection == "open") {
-                    this.sock.state = update.connection;
+                    this.state = update.connection;
                     this.emit("ready", "connection has ready");
                 }
             })
