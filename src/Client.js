@@ -207,7 +207,7 @@ class Client extends EventEmitter {
      */
     destroy() {
         const checkSession = fs.existsSync(`./${this.options.sessionName}.json`) || fs.existsSync(`./${this.options.sessionName}`);
-        if (checkSession) fs.unlinkSync(`./${this.options.sessionName}`);
+        if (checkSession) fs.rmSync(`./${this.options.sessionName}`);
         if (checkSession) fs.unlinkSync(`./${this.options.sessionName}.json`);
         this.sock.end();
         return;
