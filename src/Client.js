@@ -68,8 +68,13 @@ class Client extends EventEmitter {
                 }
 
                 if (update.connection == "close") {
+                    if (this.isClosed) return;
                     const statusCode = new Boom(update.lastDisconnect?.error)?.output.statusCode;
-                    if (statusCode === DisconnectReason.loggedOut || statusCode === DisconnectReason.badSession || statusCode === DisconnectReason.connectionReplaced) {
+                    if (
+                        statusCode === DisconnectReason.loggedOut || 
+                        statusCode === DisconnectReason.badSession || 
+                        statusCode === DisconnectReason.connectionReplaced
+                    ) {
                         this.state = "close";
                         /**
                          * Emitted when socket is closed/disconnect from whatsapp server
@@ -89,6 +94,7 @@ class Client extends EventEmitter {
                     this.emit("connecting", "connecting to socket");
                 } else if (update.connection == "open") {
                     this.state = update.connection;
+                    this.isClosed = false;
                     this.emit("ready", "connection has ready");
                 }
             })
@@ -205,12 +211,22 @@ class Client extends EventEmitter {
 
     /**
      * Destroy a client socket connection
+     *
+     * @param {boolean} deleteSession - Indicates to delete the session(default true)
      */
-    destroy() {
-        if (fs.existsSync(`./${this.options.sessionName}`)) fs.rmSync(`./${this.options.sessionName}`, { recursive: true, force: true });
-        if (fs.existsSync(`./${this.options.sessionName}.json`)) fs.unlinkSync(`./${this.options.sessionName}.json`);
+    destroy(deleteSession = true) {
+        if (deleteSession && fs.existsSync(`./${this.options.sessionName}`)) fs.rmSync(`./${this.options.sessionName}`, { recursive: true, force: true });
+        if (deleteSession && fs.existsSync(`./${this.options.sessionName}.json`)) fs.unlinkSync(`./${this.options.sessionName}.json`);
         this.sock.end();
         return;
+    }
+
+    /**
+     * Close connection of socket
+     */
+    close() {
+        this.isClosed = true;
+        return this.sock.ws.close();
     }
 }
 

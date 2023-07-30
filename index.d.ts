@@ -14,6 +14,9 @@ declare namespace WaSocketJS {
         /** Indicates state of socket connection */
         state?: ConnectionState;
 
+        /** connection accidentally closed? */
+        isClosed?: boolean;
+
         /** Initialize client set up */
         initialize(): Promise<void>;
 
@@ -27,7 +30,10 @@ declare namespace WaSocketJS {
         getGroupMetadata(groupId: string): Promise<GroupMetadata>;
 
         /** Destroy a socket client connection */
-        destroy(): void;
+        destroy(deleteSession: boolean): void;
+
+        /** Close connection of socket */
+        close(): void;
 
         /** Emitted when qr is ready to scan */
         on(event: "qr", listener: (qr: string) => void): this;

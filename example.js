@@ -10,12 +10,12 @@ client.on("qr", (qr) => console.log(qr));
 client.on("connecting", (msg) => console.log(msg));
 client.on("disconnect", (msg) => {
     console.log(msg)
-    client.destroy()
+    client.destroy(true);
     process.exit(1);
 });
 client.on("ready", (msg) => console.log(msg));
 client.on("message", async (msg) => {
-    if (!msg || !msg.id.fromMe) return;
+    // if (!msg || !msg.id.fromMe) return;
     const groupInfo = msg.isGroupMsg ? await client.getGroupMetadata(msg.from) : null;
     console.log(msg);
     if (msg.body == "#ping") {
@@ -80,6 +80,9 @@ client.on("message", async (msg) => {
             const location = new Location(latitude, longitude, description);
             return msg.reply(location);
         }
+    } else if (msg.body == "#close") {
+        await client.close();
+        return process.exit(1);
     }
 })
 
