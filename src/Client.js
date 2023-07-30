@@ -34,6 +34,7 @@ class Client extends EventEmitter {
         this.options = Util.mergeDefault(DefaultOptions, options);
 
         this.sock = null;
+        this.state = "close";
 
         // implement the store
         this.store = makeInMemoryStore({ logger: pino({ level: "silent" }) });

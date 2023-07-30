@@ -6,6 +6,7 @@ const client = new Client({ sessionName: "baileys_session", self: true });
 
 client.initialize();
 
+console.log(client.state)
 client.on("qr", (qr) => console.log(qr));
 client.on("connecting", (msg) => console.log(msg));
 client.on("disconnect", (msg) => {
